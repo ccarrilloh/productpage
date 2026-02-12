@@ -179,20 +179,40 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
+
+  // =========================
+  // Mobile Language Toggle (UI only)
+  // =========================
+  const mobileLangToggle = document.getElementById('mobileLangToggle');
+  const mobileLangDisplay = document.getElementById('mobileLangDisplay');
+
+  function getInitialLang(){
+    return localStorage.getItem('gb_lang') || 'es';
+  }
+
+  function applyLang(lang){
+    localStorage.setItem('gb_lang', lang);
+    if (mobileLangDisplay){
+      mobileLangDisplay.textContent = (lang === 'es') ? 'Español' : 'English';
+    }
+    // Nota: esto solo actualiza el label del menú. La traducción real del sitio se implementa después.
+  }
+
+  applyLang(getInitialLang());
+
+  if (mobileLangToggle){
+    mobileLangToggle.addEventListener('click', () => {
+      const current = localStorage.getItem('gb_lang') || 'es';
+      const next = current === 'es' ? 'en' : 'es';
+      applyLang(next);
+    });
+  }
+
   // Keep sticky heights in sync
   window.addEventListener("load", syncStickyHeights);
   window.addEventListener("resize", syncStickyHeights);
   // First paint sync (fonts can shift layout)
   setTimeout(syncStickyHeights, 50);
-
-  // =========================
-  // Cart badge demo (safe)
-  // =========================
-  const cartBadge = document.getElementById("cartBadge");
-  if (cartBadge) {
-    const value = Number(cartBadge.textContent || "0");
-    cartBadge.classList.toggle("show", value > 0);
-  }
   // =========================
   // Newsletter (validation states)
   // =========================

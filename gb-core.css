@@ -79,11 +79,33 @@
   --accent-purple: #8b5cf6;  /* morado acento */  
   --accent-orange: #FF6B2B;
 
+  /* Newsletter CTA (naranja fijo) */
+  --newsletter-cta-bg: var(--accent-orange);
+  --newsletter-cta-bg-hover: color-mix(in srgb, var(--accent-orange) 92%, #ffffff 8%);
+  --newsletter-cta-bg-pressed: color-mix(in srgb, var(--accent-orange) 82%, #000000 18%);
+  --newsletter-cta-border: color-mix(in srgb, var(--accent-orange) 55%, transparent);
+  --newsletter-cta-border-hover: color-mix(in srgb, var(--accent-orange) 75%, transparent);
+  --newsletter-cta-text: #ffffff;
+  --newsletter-cta-shadow: 0 10px 24px rgba(0,0,0,.28);
+
   /* Glow border gradient (card hover) */
   --glow-from: #FF30FF;      /* magenta */
   --glow-to: #00b7ff;        /* cyan */
   --glow-angle: 163deg;
   --glow-width: 2px;
+
+  /* Delivery / Order status (badges) */
+  --status-success-fg: var(--success);
+  --status-success-bg: rgba(34, 197, 94, 0.125);   /* success + 0x20 */
+
+  --status-warning-fg: var(--warning);
+  --status-warning-bg: rgba(245, 158, 11, 0.125);  /* warning + 0x20 */
+
+  --status-danger-fg: var(--danger);
+  --status-danger-bg: rgba(239, 68, 68, 0.125);    /* danger + 0x20 */
+                       
+  --status-neon-fg: #00ff88;
+  --status-neon-bg: rgba(0, 255, 136, 0.125);      /* Delivered + 0x20 */
 
   /* Stars */
   --star-yellow: #fbbf24;
@@ -463,6 +485,11 @@ a {
 /* Hide text on mobile, show on desktop */
 .icon-button > span:not(.icon-wrap) {
   display: none;
+}
+
+/* BUT: keep cart badge visible on mobile */
+.icon-button > .cart-badge{
+  display: inline-flex;
 }
 
 @media (min-width: 64rem) {
@@ -880,53 +907,71 @@ a {
   color: var(--color-text);
 }
 
-.mobile-menu__link:hover {
+.mobile-menu__link{
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Hover (solo dispositivos con hover real) */
+@media (hover: hover) and (pointer: fine){
+  .mobile-menu__link:hover{
+    background: var(--accent-purple-soft);
+    border-left-color: var(--color-accent);
+    color: var(--color-text);
+  }
+  .mobile-menu__link:hover .icon-wrap,
+  .mobile-menu__link:hover svg{
+    color: var(--color-text);
+  }
+}
+
+/* Touch/Keyboard feedback (mobile) */
+.mobile-menu__link:active,
+.mobile-menu__link:focus-visible{
   background: var(--accent-purple-soft);
   border-left-color: var(--color-accent);
   color: var(--color-text);
 }
 
-/* Mantener iconos blancos en hover */
-.mobile-menu__link:hover .icon-wrap,
-.mobile-menu__link:hover svg {
+.mobile-menu__link:focus-visible{
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(139,92,246,.35), var(--shadow-1);
+}
+
+.mobile-menu__link:active .icon-wrap,
+.mobile-menu__link:active svg,
+.mobile-menu__link:focus-visible .icon-wrap,
+.mobile-menu__link:focus-visible svg{
   color: var(--color-text);
 }
-
-.mobile-menu__link:active {
-  background: var(--accent-purple);
+/* Separator (between nav and settings) */
+.mobile-menu__separator{
+  height: 1px;
+  background: var(--color-border);
+  margin: var(--size-3) 0;
+  opacity: .9;
 }
 
-/* Toggle de Tema - Diseño especial con fondo blanco/negro */
-.mobile-menu__link--theme {
-  background-color: #ffffff; /* Fondo blanco por defecto (tema oscuro) */
-  color: #000000; /* Texto negro */
-  border-left-color: transparent;
-  margin-top: var(--size-3); /* 8px de separación del idioma */
+/* Reset button styling for menu rows */
+.mobile-menu__nav button.mobile-menu__link{
+  width: 100%;
+  text-align: left;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  font: inherit;
 }
 
-.mobile-menu__link--theme:hover {
-  background-color: #f5f5f5;
-  border-left-color: transparent;
-  color: #000000;
+/* Settings rows (Idioma / Tema)
+   - Deben verse igual que el resto de items (.mobile-menu__link)
+   - Solo mantenemos una sombra sutil (como pediste)
+*/
+.mobile-menu__link--settings{
+  box-shadow: var(--shadow-1);
 }
 
-.mobile-menu__link--theme .icon-wrap {
-  color: #000000;
-}
-
-/* Tema claro - invertir colores */
-[data-theme="light"] .mobile-menu__link--theme {
-  background-color: #1a1a1a; /* Fondo oscuro */
-  color: #ffffff; /* Texto blanco */
-}
-
-[data-theme="light"] .mobile-menu__link--theme:hover {
-  background-color: #2a2a2a;
-  color: #ffffff;
-}
-
-[data-theme="light"] .mobile-menu__link--theme .icon-wrap {
-  color: #ffffff;
+.mobile-menu__link--settings:focus-visible{
+  outline: none;
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-accent) 40%, transparent), var(--shadow-1);
 }
 
 /* Primary Navigation */
@@ -952,6 +997,47 @@ a {
   .theme-switch {
     display: none;
   }
+
+  .header-actions .icon-button:not(.search-toggle):not(.cart-button) {
+  display: none;
+}
+
+  .breadcrumbs-bar .language-selector,
+  .breadcrumbs-bar .theme-switch {
+  display: none;
+}
+}
+
+/* ============================================
+   Mobile menu: settings 
+   ============================================ */
+
+/* En desktop (hover real) */
+@media (hover: hover) and (pointer: fine){
+  button.mobile-menu__link.mobile-menu__link--settings:hover{
+    background: var(--accent-purple-soft);
+    border-left-color: var(--color-accent);
+    color: var(--color-text);
+    box-shadow: var(--shadow-1);
+  }
+}
+
+/* En mobile/touch: feedback al tap */
+button.mobile-menu__link.mobile-menu__link--settings:active{
+  background: var(--accent-purple);
+  border-left-color: var(--color-accent);
+  color: var(--color-text);
+  box-shadow: var(--shadow-1);
+}
+
+/* Focus visible (teclado / accesibilidad) */
+button.mobile-menu__link.mobile-menu__link--settings:focus-visible{
+  background: var(--accent-purple-soft);
+  border-left-color: var(--color-accent);
+  outline: none;
+  box-shadow:
+    0 0 0 3px color-mix(in srgb, var(--color-accent) 40%, transparent),
+    var(--shadow-1);
 }
 
 /* ============================================
@@ -1468,9 +1554,9 @@ body.is-locked {
 
 .newsletter-title {
   margin: 0 0 var(--size-3);
-  font-size: var(--h-lg);
+  font-size: var(--h-md);
   line-height: var(--lh-120);
-  font-weight: 900;
+  font-weight: 600;
   color: var(--color-text);
 }
 
@@ -1534,14 +1620,15 @@ body.is-locked {
   background: rgba(0, 0, 0, 0.03);
 }
 
-.newsletter-button {
+.newsletter-button{
   padding: var(--size-4) var(--size-5);
   border-radius: var(--radius-1);
-  border: 1px solid var(--color-accent-border);
-  background: var(--color-accent-subtle);
-  color: var(--color-text);
+  border: 1px solid var(--newsletter-cta-border);
+  background: var(--newsletter-cta-bg);
+  color: var(--newsletter-cta-text);
   font-weight: 800;
   cursor: pointer;
+  box-shadow: var(--newsletter-cta-shadow);
   transition:
     background var(--dur-1) var(--ease-out),
     border-color var(--dur-1) var(--ease-out),
@@ -1549,15 +1636,42 @@ body.is-locked {
     transform var(--dur-1) var(--ease-out);
 }
 
-.newsletter-button:hover {
-  background: color-mix(in srgb, var(--color-accent-subtle) 150%, transparent);
+.newsletter-button:hover{
+  background: var(--newsletter-cta-bg-hover);
+  border-color: var(--newsletter-cta-border-hover);
   transform: translateY(-1px);
+}
+
+.newsletter-button:active{
+  background: var(--newsletter-cta-bg-pressed);
+  transform: translateY(1px);
+}
+
+.newsletter-button:focus-visible{
+  outline: none;
+  border-color: var(--accent-orange);
+  box-shadow:
+    0 0 0 2px color-mix(in srgb, var(--accent-orange) 28%, transparent),
+    0 0 18px color-mix(in srgb, var(--accent-orange) 16%, transparent),
+    var(--newsletter-cta-shadow);
+}
+
+.newsletter-button:disabled{
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
 }
 
 @media (max-width: 45rem) {
   .newsletter-content {
     flex-direction: column;
     align-items: flex-start;
+  }
+
+  .newsletter-title{
+    font-size: var(--h-sm);      /* 18px */
+    font-weight: 600;
   }
 
   .newsletter-form {
@@ -1826,11 +1940,12 @@ body.is-locked {
   width: max-content;
   padding: var(--size-4) var(--size-5);
   border-radius: var(--radius-1);
-  border: 1px solid var(--color-border);
-  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--accent-purple-border);
+  background: var(--accent-purple-soft);
   color: var(--color-text);
   font-weight: 800;
   cursor: pointer;
+  box-shadow: 0 0 0 1px var(--accent-purple-glow);
   transition:
     background var(--dur-1) var(--ease-out),
     border-color var(--dur-1) var(--ease-out),
@@ -1839,9 +1954,11 @@ body.is-locked {
 }
 
 .contact-button:hover {
-  background: var(--accent-purple-soft);
-  border-color: var(--accent-purple-border);
-  box-shadow: 0 0 0 1px var(--accent-purple-glow);
+  background: color-mix(in srgb, var(--accent-purple-soft) 140%, transparent);
+  border-color: var(--color-accent-border);
+  box-shadow:
+    0 0 0 2px color-mix(in srgb, var(--color-accent) 18%, transparent),
+    0 0 18px color-mix(in srgb, var(--color-accent) 10%, transparent);
   transform: translateY(-1px);
 }
 
@@ -1855,6 +1972,25 @@ body.is-locked {
   box-shadow:
     0 0 0 2px color-mix(in srgb, var(--color-accent) 18%, transparent),
     0 0 18px color-mix(in srgb, var(--color-accent) 10%, transparent);
+}
+
+/* Footer - Contact button: hover morado (no verde) */
+@media (hover:hover) and (pointer:fine){
+  .contact-button:hover{
+    background: var(--accent-purple);
+    color: #fff;
+    border-color: var(--accent-purple-border);
+    box-shadow:
+      0 0 0 2px color-mix(in srgb, var(--accent-purple) 22%, transparent),
+      0 0 18px color-mix(in srgb, var(--accent-purple) 14%, transparent);
+    transform: translateY(-1px);
+  }
+}
+
+.contact-button:active{
+  background: color-mix(in srgb, var(--accent-purple) 85%, #000 15%);
+  border-color: var(--accent-purple-border);
+  color: #fff;
 }
 
 :root[data-theme="light"] .contact-button {

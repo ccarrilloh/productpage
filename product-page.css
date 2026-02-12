@@ -639,7 +639,7 @@
 }
 
 .button-primary:hover {
-    background-color: var(--accent-green);
+    background-color: var(--accent-purple);
     transform: translateY(-2px);
 }
 
@@ -1388,19 +1388,22 @@
 /* COLOR VARIANTS GALLERY - CON DISEÑO ORIGINAL */
 .color-variants-gallery {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(84px, 1fr));
+    grid-template-columns: repeat(auto-fill, 84px);
     gap: var(--spacing-sm);
-    margin-bottom: 48px;
+    justify-content: start;
+    margin-bottom: var(--spacing-2xl);
 }
 
 /* DESKTOP: Hover con overlay */
 .variant-item {
     position: relative;
+    width: 84px;
+    height: 84px;
     cursor: pointer;
     border-radius: var(--radius-lg);
     overflow: hidden;
     transition: all var(--transition-base);
-    border: 2px solid transparent;
+    border: 3px solid transparent;
 }
 
 .variant-item:hover {
@@ -1415,16 +1418,17 @@
 
 /* IMÁGENES 84x84px FIJAS */
 .variant-item img {
-    width: 84px;
-    height: 84px;
+    width: 100%;
+    height: 100%;
     object-fit: cover;
     transition: transform var(--transition-base);
-    border-radius: var(--radius-1);
+    border-radius: inherit;
     display: block;
+    transform: scale(1.09);
 }
 
 .variant-item:hover img {
-    transform: scale(1.05);
+    transform: scale(1.15);
 }
 
 /* NOMBRE CON OVERLAY EN DESKTOP */
@@ -1434,8 +1438,8 @@
     left: 0;
     right: 0;
     padding: var(--size-2);
-    background: linear-gradient(to top, rgba(0, 0, 0, 0.9), transparent);
-    color: white;
+    background: rgb(0, 0, 0);
+    color: rgb(255, 255, 255);
     font-size: var(--t-tn);
     font-weight: 600;
     text-align: center;
@@ -1457,11 +1461,19 @@
         align-items: center;
         gap: var(--size-2);
         padding: var(--size-2);
+        height: auto;      
+        overflow: visible;  
+        width: 72px; 
     }
 
     .variant-item img {
         width: 72px;
         height: 72px;
+        display: block;
+        object-fit: cover;
+        border-radius: var(--radius-lg);
+        border: 2px solid transparent;
+        box-sizing: border-box;
     }
 
     .variant-name {
@@ -1472,6 +1484,7 @@
         color: var(--color-text-secondary);
         padding: 0;
         font-size: var(--t-tn);
+        text-align: center;
     }
 
     .variant-item.is-active .variant-name {
@@ -1488,6 +1501,7 @@
 
     .color-variants-gallery {
         grid-template-columns: repeat(auto-fill, minmax(72px, 1fr));
+        justify-content: start;
     }
 }
 
